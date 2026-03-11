@@ -1,0 +1,477 @@
+openapi: "3.0.3"
+info:
+  title: Zendesk Ticket Mirror API
+  version: "1.0.0"
+  description: Read-only API serving mirrored Zendesk ticket data.
+paths:
+  /v1/tickets:
+    get:
+      operationId: listTickets
+      summary: List tickets with optional filters and pagination
+      parameters:
+        - name: status
+          in: query
+          schema:
+            type: string
+            enum: [new, open, pending, hold, solved, closed]
+        - name: type
+          in: query
+          schema:
+            type: string
+            enum: [problem, incident, question, task]
+        - name: priority
+          in: query
+          schema:
+            type: string
+            enum: [urgent, high, normal, low]
+        - name: requester_id
+          in: query
+          schema:
+            type: integer
+            format: int64
+        - name: assignee_id
+          in: query
+          schema:
+            type: integer
+            format: int64
+        - name: submitter_id
+          in: query
+          schema:
+            type: integer
+            format: int64
+        - name: organization_id
+          in: query
+          schema:
+            type: integer
+            format: int64
+        - name: group_id
+          in: query
+          schema:
+            type: integer
+            format: int64
+        - name: brand_id
+          in: query
+          schema:
+            type: integer
+            format: int64
+        - name: tag
+          in: query
+          description: Filter by tag value
+          schema:
+            type: string
+        - name: search
+          in: query
+          description: Search in subject (case-insensitive)
+          schema:
+            type: string
+        - name: created_after
+          in: query
+          schema:
+            type: string
+            format: date-time
+        - name: created_before
+          in: query
+          schema:
+            type: string
+            format: date-time
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 50
+            minimum: 1
+            maximum: 200
+        - name: offset
+          in: query
+          schema:
+            type: integer
+            default: 0
+            minimum: 0
+        - name: sort_by
+          in: query
+          schema:
+            type: string
+            enum: [created_at, updated_at]
+            default: created_at
+        - name: sort_order
+          in: query
+          schema:
+            type: string
+            enum: [asc, desc]
+            default: desc
+      responses:
+        "200":
+          description: Paginated list of tickets
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TicketList"
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /v1/tickets/{ticketId}:
+    get:
+      operationId: getTicket
+      summary: Get a single ticket with all related data
+      parameters:
+        - name: ticketId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        "200":
+          description: Ticket with embedded relations
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TicketDetail"
+        "404":
+          description: Ticket not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /v1/tickets/{ticketId}/tags:
+    get:
+      operationId: getTicketTags
+      summary: Get tags for a ticket
+      parameters:
+        - name: ticketId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        "200":
+          description: List of tags
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+        "404":
+          description: Ticket not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /v1/tickets/{ticketId}/collaborators:
+    get:
+      operationId: getTicketCollaborators
+      summary: Get collaborator IDs for a ticket
+      parameters:
+        - name: ticketId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        "200":
+          description: List of collaborator user IDs
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: integer
+                  format: int64
+        "404":
+          description: Ticket not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /v1/tickets/{ticketId}/followers:
+    get:
+      operationId: getTicketFollowers
+      summary: Get follower IDs for a ticket
+      parameters:
+        - name: ticketId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        "200":
+          description: List of follower user IDs
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: integer
+                  format: int64
+        "404":
+          description: Ticket not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /v1/tickets/{ticketId}/email-ccs:
+    get:
+      operationId: getTicketEmailCCs
+      summary: Get email CC user IDs for a ticket
+      parameters:
+        - name: ticketId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        "200":
+          description: List of email CC user IDs
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: integer
+                  format: int64
+        "404":
+          description: Ticket not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /v1/tickets/{ticketId}/followups:
+    get:
+      operationId: getTicketFollowups
+      summary: Get follow-up ticket IDs
+      parameters:
+        - name: ticketId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        "200":
+          description: List of follow-up ticket IDs
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: integer
+                  format: int64
+        "404":
+          description: Ticket not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: X-API-Key
+  schemas:
+    Error:
+      type: object
+      required: [message]
+      properties:
+        message:
+          type: string
+    TicketList:
+      type: object
+      required: [tickets, total, limit, offset]
+      properties:
+        tickets:
+          type: array
+          items:
+            $ref: "#/components/schemas/Ticket"
+        total:
+          type: integer
+          format: int64
+        limit:
+          type: integer
+        offset:
+          type: integer
+    Ticket:
+      type: object
+      required: [id]
+      properties:
+        id:
+          type: integer
+          format: int64
+        subject:
+          type: string
+          nullable: true
+        raw_subject:
+          type: string
+          nullable: true
+        description:
+          type: string
+          nullable: true
+        status:
+          type: string
+          nullable: true
+        type:
+          type: string
+          nullable: true
+        priority:
+          type: string
+          nullable: true
+        recipient:
+          type: string
+          nullable: true
+        requester_id:
+          type: integer
+          format: int64
+          nullable: true
+        submitter_id:
+          type: integer
+          format: int64
+          nullable: true
+        assignee_id:
+          type: integer
+          format: int64
+          nullable: true
+        organization_id:
+          type: integer
+          format: int64
+          nullable: true
+        group_id:
+          type: integer
+          format: int64
+          nullable: true
+        brand_id:
+          type: integer
+          format: int64
+          nullable: true
+        ticket_form_id:
+          type: integer
+          format: int64
+          nullable: true
+        custom_status_id:
+          type: integer
+          format: int64
+          nullable: true
+        external_id:
+          type: string
+          nullable: true
+        url:
+          type: string
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+          nullable: true
+        updated_at:
+          type: string
+          format: date-time
+          nullable: true
+        has_incidents:
+          type: boolean
+          nullable: true
+        is_public:
+          type: boolean
+          nullable: true
+        allow_channelback:
+          type: boolean
+          nullable: true
+        allow_attachments:
+          type: boolean
+          nullable: true
+        from_messaging_channel:
+          type: boolean
+          nullable: true
+        tags:
+          type: string
+          nullable: true
+          description: Raw tags string
+        custom_fields:
+          description: Custom field values
+          nullable: true
+        satisfaction_rating:
+          $ref: "#/components/schemas/SatisfactionRating"
+        via:
+          $ref: "#/components/schemas/Via"
+    TicketDetail:
+      allOf:
+        - $ref: "#/components/schemas/Ticket"
+        - type: object
+          properties:
+            tag_list:
+              type: array
+              items:
+                type: string
+            collaborator_ids:
+              type: array
+              items:
+                type: integer
+                format: int64
+            follower_ids:
+              type: array
+              items:
+                type: integer
+                format: int64
+            email_cc_ids:
+              type: array
+              items:
+                type: integer
+                format: int64
+            followup_ids:
+              type: array
+              items:
+                type: integer
+                format: int64
+    SatisfactionRating:
+      type: object
+      nullable: true
+      properties:
+        score:
+          type: string
+          nullable: true
+        id:
+          type: integer
+          format: int64
+          nullable: true
+        reason:
+          type: string
+          nullable: true
+        reason_id:
+          type: integer
+          format: int64
+          nullable: true
+        comment:
+          type: string
+          nullable: true
+    Via:
+      type: object
+      nullable: true
+      properties:
+        channel:
+          type: string
+          nullable: true
+        source_from:
+          description: Source origin details
+          nullable: true
+        source_to:
+          description: Source destination details
+          nullable: true
+        source_rel:
+          type: string
+          nullable: true
+
+security:
+  - {}
+  - ApiKeyAuth: []

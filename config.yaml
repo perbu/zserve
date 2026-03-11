@@ -1,0 +1,8 @@
+server:
+  address: ":8080"
+  # Optional API key. Leave empty to disable authentication.
+  api_key: ""
+
+database:
+  schema: zendesk
+  ssl_mode: disable
