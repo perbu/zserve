@@ -249,6 +249,215 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
+  /v1/tickets/{ticketId}/comments:
+    get:
+      operationId: getTicketComments
+      summary: Get comments for a ticket
+      parameters:
+        - name: ticketId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        "200":
+          description: List of comments
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Comment"
+        "404":
+          description: Ticket not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /v1/users:
+    get:
+      operationId: listUsers
+      summary: List users with pagination
+      parameters:
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 50
+            minimum: 1
+            maximum: 200
+        - name: offset
+          in: query
+          schema:
+            type: integer
+            default: 0
+            minimum: 0
+      responses:
+        "200":
+          description: Paginated list of users
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserList"
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /v1/users/{userId}:
+    get:
+      operationId: getUser
+      summary: Get a single user
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        "200":
+          description: User details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        "404":
+          description: User not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /v1/organizations:
+    get:
+      operationId: listOrganizations
+      summary: List organizations with pagination
+      parameters:
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 50
+            minimum: 1
+            maximum: 200
+        - name: offset
+          in: query
+          schema:
+            type: integer
+            default: 0
+            minimum: 0
+      responses:
+        "200":
+          description: Paginated list of organizations
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrganizationList"
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /v1/organizations/{organizationId}:
+    get:
+      operationId: getOrganization
+      summary: Get a single organization
+      parameters:
+        - name: organizationId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        "200":
+          description: Organization details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Organization"
+        "404":
+          description: Organization not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /v1/groups:
+    get:
+      operationId: listGroups
+      summary: List groups with pagination
+      parameters:
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 50
+            minimum: 1
+            maximum: 200
+        - name: offset
+          in: query
+          schema:
+            type: integer
+            default: 0
+            minimum: 0
+      responses:
+        "200":
+          description: Paginated list of groups
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GroupList"
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /v1/groups/{groupId}:
+    get:
+      operationId: getGroup
+      summary: Get a single group
+      parameters:
+        - name: groupId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        "200":
+          description: Group details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Group"
+        "404":
+          description: Group not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
   /v1/tickets/{ticketId}/followups:
     get:
       operationId: getTicketFollowups
@@ -403,6 +612,21 @@ components:
           nullable: true
         satisfaction_rating:
           $ref: "#/components/schemas/SatisfactionRating"
+        requester_name:
+          type: string
+          nullable: true
+        assignee_name:
+          type: string
+          nullable: true
+        submitter_name:
+          type: string
+          nullable: true
+        organization_name:
+          type: string
+          nullable: true
+        group_name:
+          type: string
+          nullable: true
         via:
           $ref: "#/components/schemas/Via"
     TicketDetail:
@@ -434,6 +658,185 @@ components:
               items:
                 type: integer
                 format: int64
+    Comment:
+      type: object
+      required: [id]
+      properties:
+        id:
+          type: integer
+          format: int64
+        author_id:
+          type: integer
+          format: int64
+          nullable: true
+        body:
+          type: string
+          nullable: true
+        public:
+          type: boolean
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+          nullable: true
+        via_channel:
+          type: string
+          nullable: true
+        author_name:
+          type: string
+          nullable: true
+    User:
+      type: object
+      required: [id]
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+          nullable: true
+        email:
+          type: string
+          nullable: true
+        role:
+          type: string
+          nullable: true
+        organization_id:
+          type: integer
+          format: int64
+          nullable: true
+        active:
+          type: boolean
+          nullable: true
+        suspended:
+          type: boolean
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+          nullable: true
+        updated_at:
+          type: string
+          format: date-time
+          nullable: true
+        time_zone:
+          type: string
+          nullable: true
+        locale:
+          type: string
+          nullable: true
+        phone:
+          type: string
+          nullable: true
+    UserList:
+      type: object
+      required: [users, total, limit, offset]
+      properties:
+        users:
+          type: array
+          items:
+            $ref: "#/components/schemas/User"
+        total:
+          type: integer
+          format: int64
+        limit:
+          type: integer
+        offset:
+          type: integer
+    Organization:
+      type: object
+      required: [id]
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+          nullable: true
+        shared_tickets:
+          type: boolean
+          nullable: true
+        shared_comments:
+          type: boolean
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+          nullable: true
+        updated_at:
+          type: string
+          format: date-time
+          nullable: true
+        details:
+          type: string
+          nullable: true
+        notes:
+          type: string
+          nullable: true
+        group_id:
+          type: integer
+          format: int64
+          nullable: true
+    OrganizationList:
+      type: object
+      required: [organizations, total, limit, offset]
+      properties:
+        organizations:
+          type: array
+          items:
+            $ref: "#/components/schemas/Organization"
+        total:
+          type: integer
+          format: int64
+        limit:
+          type: integer
+        offset:
+          type: integer
+    Group:
+      type: object
+      required: [id]
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+          nullable: true
+        description:
+          type: string
+          nullable: true
+        is_public:
+          type: boolean
+          nullable: true
+        default:
+          type: boolean
+          nullable: true
+        deleted:
+          type: boolean
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+          nullable: true
+        updated_at:
+          type: string
+          format: date-time
+          nullable: true
+    GroupList:
+      type: object
+      required: [groups, total, limit, offset]
+      properties:
+        groups:
+          type: array
+          items:
+            $ref: "#/components/schemas/Group"
+        total:
+          type: integer
+          format: int64
+        limit:
+          type: integer
+        offset:
+          type: integer
     SatisfactionRating:
       type: object
       nullable: true

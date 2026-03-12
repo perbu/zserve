@@ -84,3 +84,63 @@ CREATE TABLE zendesk.tickets__followup_ids (
     _dlt_list_idx   bigint,
     _dlt_id         varchar UNIQUE NOT NULL
 );
+
+CREATE TABLE zendesk.users (
+    id                  bigint PRIMARY KEY,
+    name                varchar,
+    email               varchar,
+    role                varchar,
+    organization_id     bigint,
+    active              boolean,
+    suspended           boolean,
+    created_at          timestamptz,
+    updated_at          timestamptz,
+    time_zone           varchar,
+    locale              varchar,
+    phone               varchar,
+    _dlt_load_id        varchar,
+    _dlt_id             varchar UNIQUE NOT NULL
+);
+
+CREATE TABLE zendesk.organizations (
+    id                  bigint PRIMARY KEY,
+    name                varchar,
+    shared_tickets      boolean,
+    shared_comments     boolean,
+    created_at          timestamptz,
+    updated_at          timestamptz,
+    details             varchar,
+    notes               varchar,
+    group_id            bigint,
+    _dlt_load_id        varchar,
+    _dlt_id             varchar UNIQUE NOT NULL
+);
+
+CREATE TABLE zendesk.groups (
+    id                  bigint PRIMARY KEY,
+    name                varchar,
+    description         varchar,
+    is_public           boolean,
+    "default"           boolean,
+    deleted             boolean,
+    created_at          timestamptz,
+    updated_at          timestamptz,
+    _dlt_load_id        varchar,
+    _dlt_id             varchar UNIQUE NOT NULL
+);
+
+CREATE TABLE zendesk.ticket_comments (
+    id              bigint NOT NULL,
+    type            varchar,
+    author_id       bigint,
+    body            varchar,
+    html_body       varchar,
+    plain_body      varchar,
+    public          boolean,
+    audit_id        bigint,
+    created_at      timestamptz,
+    ticket_id       bigint,
+    via__channel    varchar,
+    _dlt_load_id    varchar NOT NULL,
+    _dlt_id         varchar UNIQUE NOT NULL
+);

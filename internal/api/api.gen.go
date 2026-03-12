@@ -132,9 +132,61 @@ func (e ListTicketsParamsSortOrder) Valid() bool {
 	}
 }
 
+// Comment defines model for Comment.
+type Comment struct {
+	AuthorId   *int64     `json:"author_id,omitempty"`
+	AuthorName *string    `json:"author_name,omitempty"`
+	Body       *string    `json:"body,omitempty"`
+	CreatedAt  *time.Time `json:"created_at,omitempty"`
+	Id         int64      `json:"id"`
+	Public     *bool      `json:"public,omitempty"`
+	ViaChannel *string    `json:"via_channel,omitempty"`
+}
+
 // Error defines model for Error.
 type Error struct {
 	Message string `json:"message"`
+}
+
+// Group defines model for Group.
+type Group struct {
+	CreatedAt   *time.Time `json:"created_at,omitempty"`
+	Default     *bool      `json:"default,omitempty"`
+	Deleted     *bool      `json:"deleted,omitempty"`
+	Description *string    `json:"description,omitempty"`
+	Id          int64      `json:"id"`
+	IsPublic    *bool      `json:"is_public,omitempty"`
+	Name        *string    `json:"name,omitempty"`
+	UpdatedAt   *time.Time `json:"updated_at,omitempty"`
+}
+
+// GroupList defines model for GroupList.
+type GroupList struct {
+	Groups []Group `json:"groups"`
+	Limit  int     `json:"limit"`
+	Offset int     `json:"offset"`
+	Total  int64   `json:"total"`
+}
+
+// Organization defines model for Organization.
+type Organization struct {
+	CreatedAt      *time.Time `json:"created_at,omitempty"`
+	Details        *string    `json:"details,omitempty"`
+	GroupId        *int64     `json:"group_id,omitempty"`
+	Id             int64      `json:"id"`
+	Name           *string    `json:"name,omitempty"`
+	Notes          *string    `json:"notes,omitempty"`
+	SharedComments *bool      `json:"shared_comments,omitempty"`
+	SharedTickets  *bool      `json:"shared_tickets,omitempty"`
+	UpdatedAt      *time.Time `json:"updated_at,omitempty"`
+}
+
+// OrganizationList defines model for OrganizationList.
+type OrganizationList struct {
+	Limit         int            `json:"limit"`
+	Offset        int            `json:"offset"`
+	Organizations []Organization `json:"organizations"`
+	Total         int64          `json:"total"`
 }
 
 // SatisfactionRating defines model for SatisfactionRating.
@@ -151,6 +203,7 @@ type Ticket struct {
 	AllowAttachments *bool      `json:"allow_attachments,omitempty"`
 	AllowChannelback *bool      `json:"allow_channelback,omitempty"`
 	AssigneeId       *int64     `json:"assignee_id,omitempty"`
+	AssigneeName     *string    `json:"assignee_name,omitempty"`
 	BrandId          *int64     `json:"brand_id,omitempty"`
 	CreatedAt        *time.Time `json:"created_at,omitempty"`
 
@@ -161,18 +214,22 @@ type Ticket struct {
 	ExternalId           *string             `json:"external_id,omitempty"`
 	FromMessagingChannel *bool               `json:"from_messaging_channel,omitempty"`
 	GroupId              *int64              `json:"group_id,omitempty"`
+	GroupName            *string             `json:"group_name,omitempty"`
 	HasIncidents         *bool               `json:"has_incidents,omitempty"`
 	Id                   int64               `json:"id"`
 	IsPublic             *bool               `json:"is_public,omitempty"`
 	OrganizationId       *int64              `json:"organization_id,omitempty"`
+	OrganizationName     *string             `json:"organization_name,omitempty"`
 	Priority             *string             `json:"priority,omitempty"`
 	RawSubject           *string             `json:"raw_subject,omitempty"`
 	Recipient            *string             `json:"recipient,omitempty"`
 	RequesterId          *int64              `json:"requester_id,omitempty"`
+	RequesterName        *string             `json:"requester_name,omitempty"`
 	SatisfactionRating   *SatisfactionRating `json:"satisfaction_rating,omitempty"`
 	Status               *string             `json:"status,omitempty"`
 	Subject              *string             `json:"subject,omitempty"`
 	SubmitterId          *int64              `json:"submitter_id,omitempty"`
+	SubmitterName        *string             `json:"submitter_name,omitempty"`
 
 	// Tags Raw tags string
 	Tags         *string    `json:"tags,omitempty"`
@@ -188,6 +245,7 @@ type TicketDetail struct {
 	AllowAttachments *bool      `json:"allow_attachments,omitempty"`
 	AllowChannelback *bool      `json:"allow_channelback,omitempty"`
 	AssigneeId       *int64     `json:"assignee_id,omitempty"`
+	AssigneeName     *string    `json:"assignee_name,omitempty"`
 	BrandId          *int64     `json:"brand_id,omitempty"`
 	CollaboratorIds  *[]int64   `json:"collaborator_ids,omitempty"`
 	CreatedAt        *time.Time `json:"created_at,omitempty"`
@@ -202,18 +260,22 @@ type TicketDetail struct {
 	FollowupIds          *[]int64            `json:"followup_ids,omitempty"`
 	FromMessagingChannel *bool               `json:"from_messaging_channel,omitempty"`
 	GroupId              *int64              `json:"group_id,omitempty"`
+	GroupName            *string             `json:"group_name,omitempty"`
 	HasIncidents         *bool               `json:"has_incidents,omitempty"`
 	Id                   int64               `json:"id"`
 	IsPublic             *bool               `json:"is_public,omitempty"`
 	OrganizationId       *int64              `json:"organization_id,omitempty"`
+	OrganizationName     *string             `json:"organization_name,omitempty"`
 	Priority             *string             `json:"priority,omitempty"`
 	RawSubject           *string             `json:"raw_subject,omitempty"`
 	Recipient            *string             `json:"recipient,omitempty"`
 	RequesterId          *int64              `json:"requester_id,omitempty"`
+	RequesterName        *string             `json:"requester_name,omitempty"`
 	SatisfactionRating   *SatisfactionRating `json:"satisfaction_rating,omitempty"`
 	Status               *string             `json:"status,omitempty"`
 	Subject              *string             `json:"subject,omitempty"`
 	SubmitterId          *int64              `json:"submitter_id,omitempty"`
+	SubmitterName        *string             `json:"submitter_name,omitempty"`
 	TagList              *[]string           `json:"tag_list,omitempty"`
 
 	// Tags Raw tags string
@@ -233,6 +295,30 @@ type TicketList struct {
 	Total   int64    `json:"total"`
 }
 
+// User defines model for User.
+type User struct {
+	Active         *bool      `json:"active,omitempty"`
+	CreatedAt      *time.Time `json:"created_at,omitempty"`
+	Email          *string    `json:"email,omitempty"`
+	Id             int64      `json:"id"`
+	Locale         *string    `json:"locale,omitempty"`
+	Name           *string    `json:"name,omitempty"`
+	OrganizationId *int64     `json:"organization_id,omitempty"`
+	Phone          *string    `json:"phone,omitempty"`
+	Role           *string    `json:"role,omitempty"`
+	Suspended      *bool      `json:"suspended,omitempty"`
+	TimeZone       *string    `json:"time_zone,omitempty"`
+	UpdatedAt      *time.Time `json:"updated_at,omitempty"`
+}
+
+// UserList defines model for UserList.
+type UserList struct {
+	Limit  int    `json:"limit"`
+	Offset int    `json:"offset"`
+	Total  int64  `json:"total"`
+	Users  []User `json:"users"`
+}
+
 // Via defines model for Via.
 type Via struct {
 	Channel *string `json:"channel,omitempty"`
@@ -243,6 +329,18 @@ type Via struct {
 
 	// SourceTo Source destination details
 	SourceTo interface{} `json:"source_to,omitempty"`
+}
+
+// ListGroupsParams defines parameters for ListGroups.
+type ListGroupsParams struct {
+	Limit  *int `form:"limit,omitempty" json:"limit,omitempty"`
+	Offset *int `form:"offset,omitempty" json:"offset,omitempty"`
+}
+
+// ListOrganizationsParams defines parameters for ListOrganizations.
+type ListOrganizationsParams struct {
+	Limit  *int `form:"limit,omitempty" json:"limit,omitempty"`
+	Offset *int `form:"offset,omitempty" json:"offset,omitempty"`
 }
 
 // ListTicketsParams defines parameters for ListTickets.
@@ -285,8 +383,26 @@ type ListTicketsParamsSortBy string
 // ListTicketsParamsSortOrder defines parameters for ListTickets.
 type ListTicketsParamsSortOrder string
 
+// ListUsersParams defines parameters for ListUsers.
+type ListUsersParams struct {
+	Limit  *int `form:"limit,omitempty" json:"limit,omitempty"`
+	Offset *int `form:"offset,omitempty" json:"offset,omitempty"`
+}
+
 // ServerInterface represents all server handlers.
 type ServerInterface interface {
+	// List groups with pagination
+	// (GET /v1/groups)
+	ListGroups(w http.ResponseWriter, r *http.Request, params ListGroupsParams)
+	// Get a single group
+	// (GET /v1/groups/{groupId})
+	GetGroup(w http.ResponseWriter, r *http.Request, groupId int64)
+	// List organizations with pagination
+	// (GET /v1/organizations)
+	ListOrganizations(w http.ResponseWriter, r *http.Request, params ListOrganizationsParams)
+	// Get a single organization
+	// (GET /v1/organizations/{organizationId})
+	GetOrganization(w http.ResponseWriter, r *http.Request, organizationId int64)
 	// List tickets with optional filters and pagination
 	// (GET /v1/tickets)
 	ListTickets(w http.ResponseWriter, r *http.Request, params ListTicketsParams)
@@ -296,6 +412,9 @@ type ServerInterface interface {
 	// Get collaborator IDs for a ticket
 	// (GET /v1/tickets/{ticketId}/collaborators)
 	GetTicketCollaborators(w http.ResponseWriter, r *http.Request, ticketId int64)
+	// Get comments for a ticket
+	// (GET /v1/tickets/{ticketId}/comments)
+	GetTicketComments(w http.ResponseWriter, r *http.Request, ticketId int64)
 	// Get email CC user IDs for a ticket
 	// (GET /v1/tickets/{ticketId}/email-ccs)
 	GetTicketEmailCCs(w http.ResponseWriter, r *http.Request, ticketId int64)
@@ -308,6 +427,12 @@ type ServerInterface interface {
 	// Get tags for a ticket
 	// (GET /v1/tickets/{ticketId}/tags)
 	GetTicketTags(w http.ResponseWriter, r *http.Request, ticketId int64)
+	// List users with pagination
+	// (GET /v1/users)
+	ListUsers(w http.ResponseWriter, r *http.Request, params ListUsersParams)
+	// Get a single user
+	// (GET /v1/users/{userId})
+	GetUser(w http.ResponseWriter, r *http.Request, userId int64)
 }
 
 // ServerInterfaceWrapper converts contexts to parameters.
@@ -318,6 +443,150 @@ type ServerInterfaceWrapper struct {
 }
 
 type MiddlewareFunc func(http.Handler) http.Handler
+
+// ListGroups operation middleware
+func (siw *ServerInterfaceWrapper) ListGroups(w http.ResponseWriter, r *http.Request) {
+
+	var err error
+
+	ctx := r.Context()
+
+	ctx = context.WithValue(ctx, ApiKeyAuthScopes, []string{})
+
+	r = r.WithContext(ctx)
+
+	// Parameter object where we will unmarshal all parameters from the context
+	var params ListGroupsParams
+
+	// ------------- Optional query parameter "limit" -------------
+
+	err = runtime.BindQueryParameterWithOptions("form", true, false, "limit", r.URL.Query(), &params.Limit, runtime.BindQueryParameterOptions{Type: "integer", Format: ""})
+	if err != nil {
+		siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "limit", Err: err})
+		return
+	}
+
+	// ------------- Optional query parameter "offset" -------------
+
+	err = runtime.BindQueryParameterWithOptions("form", true, false, "offset", r.URL.Query(), &params.Offset, runtime.BindQueryParameterOptions{Type: "integer", Format: ""})
+	if err != nil {
+		siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "offset", Err: err})
+		return
+	}
+
+	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		siw.Handler.ListGroups(w, r, params)
+	}))
+
+	for _, middleware := range siw.HandlerMiddlewares {
+		handler = middleware(handler)
+	}
+
+	handler.ServeHTTP(w, r)
+}
+
+// GetGroup operation middleware
+func (siw *ServerInterfaceWrapper) GetGroup(w http.ResponseWriter, r *http.Request) {
+
+	var err error
+
+	// ------------- Path parameter "groupId" -------------
+	var groupId int64
+
+	err = runtime.BindStyledParameterWithOptions("simple", "groupId", r.PathValue("groupId"), &groupId, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true, Type: "integer", Format: "int64"})
+	if err != nil {
+		siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "groupId", Err: err})
+		return
+	}
+
+	ctx := r.Context()
+
+	ctx = context.WithValue(ctx, ApiKeyAuthScopes, []string{})
+
+	r = r.WithContext(ctx)
+
+	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		siw.Handler.GetGroup(w, r, groupId)
+	}))
+
+	for _, middleware := range siw.HandlerMiddlewares {
+		handler = middleware(handler)
+	}
+
+	handler.ServeHTTP(w, r)
+}
+
+// ListOrganizations operation middleware
+func (siw *ServerInterfaceWrapper) ListOrganizations(w http.ResponseWriter, r *http.Request) {
+
+	var err error
+
+	ctx := r.Context()
+
+	ctx = context.WithValue(ctx, ApiKeyAuthScopes, []string{})
+
+	r = r.WithContext(ctx)
+
+	// Parameter object where we will unmarshal all parameters from the context
+	var params ListOrganizationsParams
+
+	// ------------- Optional query parameter "limit" -------------
+
+	err = runtime.BindQueryParameterWithOptions("form", true, false, "limit", r.URL.Query(), &params.Limit, runtime.BindQueryParameterOptions{Type: "integer", Format: ""})
+	if err != nil {
+		siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "limit", Err: err})
+		return
+	}
+
+	// ------------- Optional query parameter "offset" -------------
+
+	err = runtime.BindQueryParameterWithOptions("form", true, false, "offset", r.URL.Query(), &params.Offset, runtime.BindQueryParameterOptions{Type: "integer", Format: ""})
+	if err != nil {
+		siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "offset", Err: err})
+		return
+	}
+
+	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		siw.Handler.ListOrganizations(w, r, params)
+	}))
+
+	for _, middleware := range siw.HandlerMiddlewares {
+		handler = middleware(handler)
+	}
+
+	handler.ServeHTTP(w, r)
+}
+
+// GetOrganization operation middleware
+func (siw *ServerInterfaceWrapper) GetOrganization(w http.ResponseWriter, r *http.Request) {
+
+	var err error
+
+	// ------------- Path parameter "organizationId" -------------
+	var organizationId int64
+
+	err = runtime.BindStyledParameterWithOptions("simple", "organizationId", r.PathValue("organizationId"), &organizationId, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true, Type: "integer", Format: "int64"})
+	if err != nil {
+		siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "organizationId", Err: err})
+		return
+	}
+
+	ctx := r.Context()
+
+	ctx = context.WithValue(ctx, ApiKeyAuthScopes, []string{})
+
+	r = r.WithContext(ctx)
+
+	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		siw.Handler.GetOrganization(w, r, organizationId)
+	}))
+
+	for _, middleware := range siw.HandlerMiddlewares {
+		handler = middleware(handler)
+	}
+
+	handler.ServeHTTP(w, r)
+}
 
 // ListTickets operation middleware
 func (siw *ServerInterfaceWrapper) ListTickets(w http.ResponseWriter, r *http.Request) {
@@ -542,6 +811,37 @@ func (siw *ServerInterfaceWrapper) GetTicketCollaborators(w http.ResponseWriter,
 	handler.ServeHTTP(w, r)
 }
 
+// GetTicketComments operation middleware
+func (siw *ServerInterfaceWrapper) GetTicketComments(w http.ResponseWriter, r *http.Request) {
+
+	var err error
+
+	// ------------- Path parameter "ticketId" -------------
+	var ticketId int64
+
+	err = runtime.BindStyledParameterWithOptions("simple", "ticketId", r.PathValue("ticketId"), &ticketId, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true, Type: "integer", Format: "int64"})
+	if err != nil {
+		siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "ticketId", Err: err})
+		return
+	}
+
+	ctx := r.Context()
+
+	ctx = context.WithValue(ctx, ApiKeyAuthScopes, []string{})
+
+	r = r.WithContext(ctx)
+
+	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		siw.Handler.GetTicketComments(w, r, ticketId)
+	}))
+
+	for _, middleware := range siw.HandlerMiddlewares {
+		handler = middleware(handler)
+	}
+
+	handler.ServeHTTP(w, r)
+}
+
 // GetTicketEmailCCs operation middleware
 func (siw *ServerInterfaceWrapper) GetTicketEmailCCs(w http.ResponseWriter, r *http.Request) {
 
@@ -657,6 +957,78 @@ func (siw *ServerInterfaceWrapper) GetTicketTags(w http.ResponseWriter, r *http.
 
 	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		siw.Handler.GetTicketTags(w, r, ticketId)
+	}))
+
+	for _, middleware := range siw.HandlerMiddlewares {
+		handler = middleware(handler)
+	}
+
+	handler.ServeHTTP(w, r)
+}
+
+// ListUsers operation middleware
+func (siw *ServerInterfaceWrapper) ListUsers(w http.ResponseWriter, r *http.Request) {
+
+	var err error
+
+	ctx := r.Context()
+
+	ctx = context.WithValue(ctx, ApiKeyAuthScopes, []string{})
+
+	r = r.WithContext(ctx)
+
+	// Parameter object where we will unmarshal all parameters from the context
+	var params ListUsersParams
+
+	// ------------- Optional query parameter "limit" -------------
+
+	err = runtime.BindQueryParameterWithOptions("form", true, false, "limit", r.URL.Query(), &params.Limit, runtime.BindQueryParameterOptions{Type: "integer", Format: ""})
+	if err != nil {
+		siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "limit", Err: err})
+		return
+	}
+
+	// ------------- Optional query parameter "offset" -------------
+
+	err = runtime.BindQueryParameterWithOptions("form", true, false, "offset", r.URL.Query(), &params.Offset, runtime.BindQueryParameterOptions{Type: "integer", Format: ""})
+	if err != nil {
+		siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "offset", Err: err})
+		return
+	}
+
+	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		siw.Handler.ListUsers(w, r, params)
+	}))
+
+	for _, middleware := range siw.HandlerMiddlewares {
+		handler = middleware(handler)
+	}
+
+	handler.ServeHTTP(w, r)
+}
+
+// GetUser operation middleware
+func (siw *ServerInterfaceWrapper) GetUser(w http.ResponseWriter, r *http.Request) {
+
+	var err error
+
+	// ------------- Path parameter "userId" -------------
+	var userId int64
+
+	err = runtime.BindStyledParameterWithOptions("simple", "userId", r.PathValue("userId"), &userId, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true, Type: "integer", Format: "int64"})
+	if err != nil {
+		siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "userId", Err: err})
+		return
+	}
+
+	ctx := r.Context()
+
+	ctx = context.WithValue(ctx, ApiKeyAuthScopes, []string{})
+
+	r = r.WithContext(ctx)
+
+	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		siw.Handler.GetUser(w, r, userId)
 	}))
 
 	for _, middleware := range siw.HandlerMiddlewares {
@@ -786,13 +1158,20 @@ func HandlerWithOptions(si ServerInterface, options StdHTTPServerOptions) http.H
 		ErrorHandlerFunc:   options.ErrorHandlerFunc,
 	}
 
+	m.HandleFunc("GET "+options.BaseURL+"/v1/groups", wrapper.ListGroups)
+	m.HandleFunc("GET "+options.BaseURL+"/v1/groups/{groupId}", wrapper.GetGroup)
+	m.HandleFunc("GET "+options.BaseURL+"/v1/organizations", wrapper.ListOrganizations)
+	m.HandleFunc("GET "+options.BaseURL+"/v1/organizations/{organizationId}", wrapper.GetOrganization)
 	m.HandleFunc("GET "+options.BaseURL+"/v1/tickets", wrapper.ListTickets)
 	m.HandleFunc("GET "+options.BaseURL+"/v1/tickets/{ticketId}", wrapper.GetTicket)
 	m.HandleFunc("GET "+options.BaseURL+"/v1/tickets/{ticketId}/collaborators", wrapper.GetTicketCollaborators)
+	m.HandleFunc("GET "+options.BaseURL+"/v1/tickets/{ticketId}/comments", wrapper.GetTicketComments)
 	m.HandleFunc("GET "+options.BaseURL+"/v1/tickets/{ticketId}/email-ccs", wrapper.GetTicketEmailCCs)
 	m.HandleFunc("GET "+options.BaseURL+"/v1/tickets/{ticketId}/followers", wrapper.GetTicketFollowers)
 	m.HandleFunc("GET "+options.BaseURL+"/v1/tickets/{ticketId}/followups", wrapper.GetTicketFollowups)
 	m.HandleFunc("GET "+options.BaseURL+"/v1/tickets/{ticketId}/tags", wrapper.GetTicketTags)
+	m.HandleFunc("GET "+options.BaseURL+"/v1/users", wrapper.ListUsers)
+	m.HandleFunc("GET "+options.BaseURL+"/v1/users/{userId}", wrapper.GetUser)
 
 	return m
 }

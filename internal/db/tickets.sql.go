@@ -147,6 +147,51 @@ func (q *Queries) GetTicketCollaborators(ctx context.Context, id int64) ([]pgtyp
 	return items, nil
 }
 
+const getTicketComments = `-- name: GetTicketComments :many
+SELECT id, type, author_id, plain_body, public, created_at, via__channel
+FROM zendesk.ticket_comments
+WHERE ticket_id = $1
+ORDER BY created_at ASC
+`
+
+type GetTicketCommentsRow struct {
+	ID         int64
+	Type       pgtype.Text
+	AuthorID   pgtype.Int8
+	PlainBody  pgtype.Text
+	Public     pgtype.Bool
+	CreatedAt  pgtype.Timestamptz
+	ViaChannel pgtype.Text
+}
+
+func (q *Queries) GetTicketComments(ctx context.Context, ticketID pgtype.Int8) ([]GetTicketCommentsRow, error) {
+	rows, err := q.db.Query(ctx, getTicketComments, ticketID)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []GetTicketCommentsRow
+	for rows.Next() {
+		var i GetTicketCommentsRow
+		if err := rows.Scan(
+			&i.ID,
+			&i.Type,
+			&i.AuthorID,
+			&i.PlainBody,
+			&i.Public,
+			&i.CreatedAt,
+			&i.ViaChannel,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
 const getTicketEmailCCs = `-- name: GetTicketEmailCCs :many
 SELECT e.value FROM zendesk.tickets__email_cc_ids e
 JOIN zendesk.tickets t ON e._dlt_root_id = t._dlt_id

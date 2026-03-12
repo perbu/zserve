@@ -138,3 +138,9 @@ SELECT fu.value FROM zendesk.tickets__followup_ids fu
 JOIN zendesk.tickets t ON fu._dlt_root_id = t._dlt_id
 WHERE t.id = $1
 ORDER BY fu._dlt_list_idx;
+
+-- name: GetTicketComments :many
+SELECT id, type, author_id, plain_body, public, created_at, via__channel
+FROM zendesk.ticket_comments
+WHERE ticket_id = $1
+ORDER BY created_at ASC;

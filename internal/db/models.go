@@ -8,6 +8,33 @@ import (
 	"github.com/jackc/pgx/v5/pgtype"
 )
 
+type ZendeskGroup struct {
+	ID          int64
+	Name        pgtype.Text
+	Description pgtype.Text
+	IsPublic    pgtype.Bool
+	Default     pgtype.Bool
+	Deleted     pgtype.Bool
+	CreatedAt   pgtype.Timestamptz
+	UpdatedAt   pgtype.Timestamptz
+	DltLoadID   pgtype.Text
+	DltID       string
+}
+
+type ZendeskOrganization struct {
+	ID             int64
+	Name           pgtype.Text
+	SharedTickets  pgtype.Bool
+	SharedComments pgtype.Bool
+	CreatedAt      pgtype.Timestamptz
+	UpdatedAt      pgtype.Timestamptz
+	Details        pgtype.Text
+	Notes          pgtype.Text
+	GroupID        pgtype.Int8
+	DltLoadID      pgtype.Text
+	DltID          string
+}
+
 type ZendeskTicket struct {
 	ID                         int64
 	Subject                    pgtype.Text
@@ -50,6 +77,22 @@ type ZendeskTicket struct {
 	DltID                      string
 }
 
+type ZendeskTicketComment struct {
+	ID         int64
+	Type       pgtype.Text
+	AuthorID   pgtype.Int8
+	Body       pgtype.Text
+	HtmlBody   pgtype.Text
+	PlainBody  pgtype.Text
+	Public     pgtype.Bool
+	AuditID    pgtype.Int8
+	CreatedAt  pgtype.Timestamptz
+	TicketID   pgtype.Int8
+	ViaChannel pgtype.Text
+	DltLoadID  string
+	DltID      string
+}
+
 type ZendeskTicketsCollaboratorID struct {
 	Value       pgtype.Int8
 	DltRootID   pgtype.Text
@@ -88,4 +131,21 @@ type ZendeskTicketsTag struct {
 	DltParentID pgtype.Text
 	DltListIdx  pgtype.Int8
 	DltID       string
+}
+
+type ZendeskUser struct {
+	ID             int64
+	Name           pgtype.Text
+	Email          pgtype.Text
+	Role           pgtype.Text
+	OrganizationID pgtype.Int8
+	Active         pgtype.Bool
+	Suspended      pgtype.Bool
+	CreatedAt      pgtype.Timestamptz
+	UpdatedAt      pgtype.Timestamptz
+	TimeZone       pgtype.Text
+	Locale         pgtype.Text
+	Phone          pgtype.Text
+	DltLoadID      pgtype.Text
+	DltID          string
 }
